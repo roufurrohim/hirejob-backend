@@ -53,7 +53,7 @@ const response = {
                 data : null,
                 errorCode : 401,
                 error : err,
-                message: 'username / email salah'
+                message: 'Wrong username / email'
             }
             res.json(failed)
         }else if(code === 101){
@@ -62,7 +62,7 @@ const response = {
                 data : null,
                 errorCode : 401,
                 error : err,
-                message: 'email sudah terdaftar'
+                message: 'Email already exist'
             }
             res.json(failed)
         }

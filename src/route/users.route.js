@@ -1,6 +1,6 @@
 const express = require('express');
 const authen = require('../middleware/authentication');
-// const upload = require('../middleware/upload');
+const upload = require('../middleware/upload');
 
 
 const { 
@@ -19,7 +19,7 @@ usersRouter
 .get('/user/:id',authen, getDetail)
 .post('/register', register)
 .post('/login', login)
-.put('/user/:id',authen, update)
+.put('/user/:id',authen, upload, update)
 .delete('/user/:id', authen, deleteUser)
 
 module.exports = usersRouter;
