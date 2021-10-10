@@ -1,8 +1,8 @@
 require('dotenv').config()
 
 const env = {
-    DB_USERNAME: process.env.DB_USERNAME,
-    DB_PASSWORD: process.env.DB_PASSWORD,
+    dbUsername: process.env.db_username,
+    dbPassword: process.env.db_password,
     JWT_SECRET: process.env.JWT_SECRET,
 };
 module.exports = env
