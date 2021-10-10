@@ -12,10 +12,8 @@ const users = {
         const search = query.search === undefined ? '' : query.search;
         const field = query.field === undefined ? 'id' : query.field;
         const typeSort = query.sort === undefined ? '' : query.sort;
-        // eslint-disable-next-line radix
         const limit = query.limit === undefined ? 50 : parseInt(query.limit);
         const page = query.page === undefined ? 1 : query.page;
-        // eslint-disable-next-line eqeqeq
         const offset = page === 1 ? 0 : (page - 1) * limit;
 
         const result = await usersModels.findAll({
