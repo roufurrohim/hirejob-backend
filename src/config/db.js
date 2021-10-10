@@ -1,7 +1,7 @@
 const {DB_USERNAME, DB_PASSWORD} = require("../helpers/env")
 const {Sequelize} = require("sequelize")
 
-const db = new Sequelize ('hirejob', DB_USERNAME, DB_PASSWORD, {
+const db = new Sequelize ('hirejobs', DB_USERNAME, DB_PASSWORD, {
     host : 'localhost',
     dialect : "mysql",
 })

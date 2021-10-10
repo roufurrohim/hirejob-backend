@@ -60,6 +60,9 @@ const Users = db.define(
             type: DataTypes.STRING,
 
         },
+        status: {
+            type: DataTypes.NUMBER,
+        }
     },
     {
         freezeTableName: true,

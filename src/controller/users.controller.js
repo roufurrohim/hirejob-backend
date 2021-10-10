@@ -1,6 +1,7 @@
-const usersModels= require('../model/users.model')
+const usersModels= require('../models/users.model')
 const { Sequelize} = require("sequelize");
 const bcrypt = require('bcrypt');
+const fs = require("fs");
 const { success, failed } = require('../helpers/response');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../helpers/env');
@@ -27,7 +28,7 @@ const users = {
             field,
             typeSort,
         });
-        res.json(result);
+        success(res, result, 'Get All Users Success');
     },
     getDetail: async (req, res) => {
         const id = req.params.id;
@@ -36,7 +37,7 @@ const users = {
                 id,
             }
         });
-        res.json(result);
+        success(res, result, 'Get Details Users Success');
     },
     login: async (req, res) => {
         const { body } = req;
@@ -47,7 +48,7 @@ const users = {
             }
         })
         if (cekEmail.length <= 0) {
-            res.json('username salah');
+            failed(res, 100, "data failed");
         } else { 
             const passwordHash = cekEmail[0].password; 
             bcrypt.compare(body.password, passwordHash, (error, checkpassword) => {
@@ -62,9 +63,9 @@ const users = {
                       user,
                       token: jwt.sign(payload, JWT_SECRET),
                     };
-                    success(res, output, 'succes');
+                    success(res, output, 'Login Success');
                   } else {
-                    res.json("password salah")
+                    failed(res, 100, "data failed")
                   } 
             })
         }
@@ -85,33 +86,34 @@ const users = {
                 email: req.body.email,
                 password: hash,
                 no_telp: req.body.no_telp,
-                image: "images.jpg"
+                image: "default.png"
             })
-            res.json(result)
+            success(res, result, 'Register Success');
         } else {
-            res.json("email sudah ada")
+            failed(res, 101, "Email already exist")
         }
  
     },
    update: async (req, res) => {
         const { 
-            // name,
+            name,
             email, 
-            // no_telp,
+            no_telp,
             password,
             // image,
-            // special_skill,
-            // descriptions,
-            // workplace,
-            // sector,
-            // city,
-            // ig,
-            // github,
-            // gitlab,
-            // linkedin
+            special_skill,
+            descriptions,
+            workplace,
+            sector,
+            city,
+            ig,
+            github,
+            gitlab,
+            linkedin,
+            status,
 
         } = req.body;
-        // const { filename } = req.file;
+        const { filename } = req.file;
         const id = req.params.id;
         const hash = bcrypt.hashSync(password, 10);
         const Detail = await usersModels.findAll({
@@ -119,33 +121,43 @@ const users = {
                 id,
             }
         });
+        
+        if (Detail[0].image !== 'default.png') {
+            fs.unlink(`./image/uploads/${Detail[0].image}`, (err) => {
+                if (err) {
+                  errLogin(res, err);
+                }
+              });
+        } 
+          
         // if (Detail.length <= 0) {
         //     res.json("users tidak ada")
         // } else {
             const result = await usersModels.update(
                 { 
-                    // name,
+                    name,
                     email,
                     password: hash,
-                    // no_telp,
-                    // image,
-                    // special_skill,
-                    // descriptions,
-                    // workplace,
-                    // sector,
-                    // city,
-                    // ig,
-                    // github,
-                    // gitlab,
-                    // linkedin,
+                    no_telp,
+                    image: filename,
+                    special_skill,
+                    descriptions,
+                    workplace,
+                    sector,
+                    city,
+                    ig,
+                    github,
+                    gitlab,
+                    linkedin,
+                    status,
                 }, 
                 {
                     where: {
                         id,
                     },
                 });
-                console.log(Detail)
-                res.json(result)
+                
+                success(res, result, "Update Data Success")
         // }
         
    },
