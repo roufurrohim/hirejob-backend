@@ -13,7 +13,7 @@ const Users = db.define(
               
         },
         password: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.STRING,
 
         },
         no_telp: {

@@ -82,10 +82,11 @@ const users = {
         })
         if (cekEmail.length <= 0) {
             const result = await usersModels.create({
-                name: req.body.name,
-                email: req.body.email,
+                name: body.name,
+                email: body.email,
                 password: hash,
-                no_telp: req.body.no_telp,
+                no_telp: body.no_telp,
+                status: body.status,
                 image: "default.png"
             })
             success(res, result, 'Register Success');
@@ -130,9 +131,6 @@ const users = {
               });
         } 
           
-        // if (Detail.length <= 0) {
-        //     res.json("users tidak ada")
-        // } else {
             const result = await usersModels.update(
                 { 
                     name,
@@ -158,7 +156,6 @@ const users = {
                 });
                 
                 success(res, result, "Update Data Success")
-        // }
         
    },
    deleteUser: async (req, res) => {
