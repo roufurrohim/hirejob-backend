@@ -1,19 +1,17 @@
-const mysql = require('mysql2')
 const {DB_USERNAME, DB_PASSWORD} = require("../helpers/env")
+const {Sequelize} = require("sequelize")
 
-const connection = mysql.createConnection({
-    host    : "",
-    user    : DB_USERNAME,
-    password: DB_PASSWORD,
-    database: "" 
+const db = new Sequelize ('hirejobs', DB_USERNAME, DB_PASSWORD, {
+    host : 'localhost',
+    dialect : "mysql",
 })
 
-connection.connect((err)=>{
-    if(err){
-        console.log(err)
-    }else{
+db.authenticate()
+    .then(()=>{
         console.log("koneksi aman")
-    }
-})
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
 
-module.exports = connection
+module.exports = db
