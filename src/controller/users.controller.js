@@ -48,7 +48,7 @@ const users = {
             }
         })
         if (cekEmail.length <= 0) {
-            failed(res, 100, "data failed");
+            failed(res.status(404), 404, "Email not Exist");
         } else { 
             const passwordHash = cekEmail[0].password; 
             bcrypt.compare(body.password, passwordHash, (error, checkpassword) => {
@@ -65,7 +65,7 @@ const users = {
                     };
                     success(res, output, 'Login Success');
                   } else {
-                    failed(res, 100, "data failed")
+                    failed(res.status(404), 404, "Wrong Password")
                   } 
             })
         }
@@ -91,7 +91,7 @@ const users = {
             })
             success(res, result, 'Register Success');
         } else {
-            failed(res, 101, "Email already exist")
+            failed(res.status(401), 401, "Email already exist")
         }
  
     },
