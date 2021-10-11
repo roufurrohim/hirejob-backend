@@ -47,6 +47,24 @@ const response = {
                 message: 'Unauthorized'
             }
             res.json(failed)
+        }else if(code === 100){
+            const failed = {
+                status : "failed",
+                data : null,
+                errorCode : 401,
+                error : err,
+                message: 'Wrong username / email'
+            }
+            res.json(failed)
+        }else if(code === 101){
+            const failed = {
+                status : "failed",
+                data : null,
+                errorCode : 401,
+                error : err,
+                message: 'Email already exist'
+            }
+            res.json(failed)
         }
     }
 }

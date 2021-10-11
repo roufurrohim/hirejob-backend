@@ -8,11 +8,16 @@ const {Op} = require("sequelize")
 
 // const usersRouter = require('./src/route/users.route');
 const portfolioRouter = require('./src/route/portfolio.route')
+const Messages = require('./src/models/messagesModel')
+const {Op} = require("sequelize")
+
+const usersRouter = require('./src/route/users.route');
 
 const app  = express()
 app.use(cors())
 app.use(bodyparser.json())
 app.use(portfolioRouter);
+app.use(usersRouter);
 app.use("/uploads", express.static(__dirname + "/image/uploads"))
 app.use("/helpers", express.static(__dirname + "/image/helpers"))
 
