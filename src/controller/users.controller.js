@@ -48,7 +48,7 @@ const users = {
             }
         })
         if (cekEmail.length <= 0) {
-            failed(res, 100, "data failed");
+            failed(res.status(404), 404, "Email not Exist");
         } else { 
             const passwordHash = cekEmail[0].password; 
             bcrypt.compare(body.password, passwordHash, (error, checkpassword) => {
@@ -65,7 +65,7 @@ const users = {
                     };
                     success(res, output, 'Login Success');
                   } else {
-                    failed(res, 100, "data failed")
+                    failed(res.status(404), 404, "Wrong Password")
                   } 
             })
         }
@@ -82,15 +82,16 @@ const users = {
         })
         if (cekEmail.length <= 0) {
             const result = await usersModels.create({
-                name: req.body.name,
-                email: req.body.email,
+                name: body.name,
+                email: body.email,
                 password: hash,
-                no_telp: req.body.no_telp,
+                no_telp: body.no_telp,
+                status: body.status,
                 image: "default.png"
             })
             success(res, result, 'Register Success');
         } else {
-            failed(res, 101, "Email already exist")
+            failed(res.status(401), 401, "Email already exist")
         }
  
     },
@@ -130,9 +131,6 @@ const users = {
               });
         } 
           
-        // if (Detail.length <= 0) {
-        //     res.json("users tidak ada")
-        // } else {
             const result = await usersModels.update(
                 { 
                     name,
@@ -158,7 +156,6 @@ const users = {
                 });
                 
                 success(res, result, "Update Data Success")
-        // }
         
    },
    deleteUser: async (req, res) => {
