@@ -12,7 +12,6 @@ const portfolioRouter = require('./src/route/portfolio.route')
 const Messages = require('./src/models/messagesModel')
 
 const usersRouter = require('./src/route/users.route');
-// const portfolioRouter = require('./src/route/portfolio.route')
 
 const app  = express()
 app.use(cors())

@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../helpers/env");
 const Skill = require("../models/skillmodel");
 const Exp = require("../models/expmodel");
+const portfolio = require("../models/portfolio.model.js");
 const Op = Sequelize.Op;
 const sendEmail = require("../helpers/mail")
 
@@ -28,6 +29,7 @@ const users = {
       usersModels.hasMany(Skill, {foreignKey: "users_id"})
 
       usersModels.hasMany(Exp, {foreignKey: "users_id"})
+      usersModels.hasMany(portfolio, {foreignKey: "users_id"})
 
       const result = await usersModels.findAll({
         include: [Skill, Exp],
@@ -52,6 +54,19 @@ const users = {
       failed(res, 404, error);
     }
   },
+  myDetail: async (req, res) => {
+      try{
+          const id = req.userId;
+          const result = await usersModels.findAll({
+              where: {
+                  id,
+              }
+          });
+          success(res, result, 'Get Details Users Success');
+      } catch (error) {
+          failed(res, 404, error);
+      }
+  },
   getDetail: async (req, res) => {
     try {
       const id = req.params.id;
@@ -63,11 +78,13 @@ const users = {
 
       usersModels.hasMany(Exp, {foreignKey: "users_id"})
 
+      usersModels.hasMany(portfolio, {foreignKey: "users_id"})
+
       const result = await usersModels.findAll({
         where: {
           id,
         },
-        include: [Skill, Exp]
+        include: [Skill, Exp, portfolio]
       });
       success(res, result, "Get Details Users Success");
     } catch (error) {
@@ -155,8 +172,7 @@ const users = {
         linkedin,
         status,
       } = req.body;
-      console.log(name)
-      // const { filename } = req.file;
+      // console.log(name)
       const id = req.params.id;
       const hash = bcrypt.hashSync(password, 10);
       const Detail = await usersModels.findAll({
@@ -164,22 +180,13 @@ const users = {
           id,
         },
       });
-
-      if (Detail[0].image !== "default.png") {
-        fs.unlink(`./image/uploads/${Detail[0].image}`, (err) => {
-          if (err) {
-            failed(res.status(500), 500, err);
-          }
-        });
-      }
-
       const result = await usersModels.update(
         {
           name,
           email,
           password: hash,
           no_telp,
-          image: req.file ? req.file.filename : "defaultImage.png",
+          image: req.file ? req.file.filename : "default.png",
           special_skill,
           descriptions,
           workplace,
@@ -195,10 +202,18 @@ const users = {
           where: {
             id,
           },
-        }
-      );
-
-      success(res, result, "Update Data Success");
+        });
+      if (Detail[0].image === "default.png") {
+        success(res, result, "Update Data Success");
+      } else {
+        fs.unlink(`./image/uploads/${Detail[0].image}`, (err) => {
+          if (err) {
+            failed(res.status(500), 500, err);
+          } else {
+            success(res, result, "Update Data Success");
+          }
+        });
+      }
     } catch (error) {
       failed(res, 500, error);
     }
