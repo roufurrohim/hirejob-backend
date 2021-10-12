@@ -45,15 +45,14 @@ https://github.com/roufurrohim/hirejob-backend.git
 DB_USERNAME = 
 DB_PASSWORD =
 JWT_SECRET = projectteam2
+PASS_NODE =  
+EMAIL_NODE = 
 ```
 
-**Flowchart Program**
-
-[flowchart]
 
 **Relasi Table Database**
 
-[click me]
+[click me](https://drive.google.com/file/d/1iHdZoWObXOkF5tCoL9NOEh8hq5qKkT6K/view)
 
 
 **Sample Database**
