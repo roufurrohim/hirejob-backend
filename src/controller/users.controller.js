@@ -43,12 +43,7 @@ const users = {
             field,
             typeSort,
           })
-          const output = {
-            data: result,
-            limit,
-            page,
-          }
-      success(res, output, "Get All Users Success");
+        success(res, result, 'Get All Users Success');
 
     } catch (error) {
       failed(res, 404, error);
