@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const db = require("../config/db")
+const Users = require("./users.model")
 
 const Messages = db.define(
     "messages",
@@ -22,6 +23,7 @@ const Messages = db.define(
         timestamps: false
     }
 );
+Messages.belongsTo(Users, { as: "senderUsers", foreignKey: "sender" });
+Messages.belongsTo(Users, { as: "receiverUsers", foreignKey: "receiver" });
+
 module.exports = Messages
-
-
