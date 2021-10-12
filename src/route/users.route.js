@@ -10,6 +10,7 @@ const {
     deleteUser, 
     getDetail,
     login,
+    forgetPassword
 } = require('../controller/users.controller');
 
 const usersRouter = express.Router();
@@ -21,5 +22,6 @@ usersRouter
 .post('/login', login)
 .put('/user/:id',authen, upload, update)
 .delete('/user/:id', authen, deleteUser)
+.post('/forget-pass', forgetPassword)
 
 module.exports = usersRouter;

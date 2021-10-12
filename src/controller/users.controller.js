@@ -8,6 +8,7 @@ const { JWT_SECRET } = require("../helpers/env");
 const Skill = require("../models/skillmodel");
 const Exp = require("../models/expmodel");
 const Op = Sequelize.Op;
+const sendEmail = require("../helpers/mail")
 
 const users = {
   getAll: async (req, res) => {
@@ -154,7 +155,8 @@ const users = {
         linkedin,
         status,
       } = req.body;
-      const { filename } = req.file;
+      console.log(name)
+      // const { filename } = req.file;
       const id = req.params.id;
       const hash = bcrypt.hashSync(password, 10);
       const Detail = await usersModels.findAll({
@@ -177,7 +179,7 @@ const users = {
           email,
           password: hash,
           no_telp,
-          image: filename,
+          image: req.file ? req.file.filename : "defaultImage.png",
           special_skill,
           descriptions,
           workplace,
@@ -215,6 +217,37 @@ const users = {
       success(res, output, "Delete Data User Success");
     } catch (error) {
       failed(res, 500, error);
+    }
+  },
+  forgetPassword: async(req, res) =>{
+    try {
+      const { body } = req;
+      const email = req.body.email;
+      const cekEmail = await usersModels.findAll({
+        where: {
+          email,
+        },
+      });
+      if (cekEmail.length <= 0) {
+        failed(res.status(404), 404, "Email not Exist");
+      } else {
+        const user = cekEmail[0];
+        const payload = {
+          id: user.id,
+        };
+        const output = {
+          user,
+          token: jwt.sign(payload, JWT_SECRET),
+        };
+        sendEmail(user, output)
+        .then((result)=>{
+          success(res, 200, result)
+        }).catch((error)=>{
+          failed(res.status(401), 401, error)
+        })
+      }
+    } catch (error) {
+      failed(res.status(500), 500, error);
     }
   },
 };
