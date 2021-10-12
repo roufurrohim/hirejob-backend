@@ -5,13 +5,13 @@ const http = require('http')
 const { Server } = require('socket.io')
 // const Messages = require('./src/models/messagesModel')
 const {Op} = require("sequelize")
+const Users = require("./src/models/users.model")
 
 // const usersRouter = require('./src/route/users.route');
 const portfolioRouter = require('./src/route/portfolio.route')
 const Messages = require('./src/models/messagesModel')
 
 const usersRouter = require('./src/route/users.route');
-
 
 const app  = express()
 app.use(cors())
@@ -61,10 +61,10 @@ io.on("connection", (socket)=>{
                 }]
             },
         })
-	const data = JSON.stringify(getMessage)
+	    const data = JSON.stringify(getMessage)
         const message = JSON.parse(data)
-        console.log(message)
-        io.to(sender).emit("history-messages", getMessage);
+        // console.log(message)
+        io.to(sender).emit("history-messages", message);
     })
     socket.on("list-user", async(sender)=>{
         const getUser = await Messages.findAll({
@@ -74,12 +74,12 @@ io.on("connection", (socket)=>{
             group: ['sender','receiver'],
             include: [
                 {model: Users, as: 'senderUsers'},
-                {model: Users,as: 'receiverUsers'}
+                {model: Users, as: 'receiverUsers'}
                     ]
         })
         const data = JSON.stringify(getUser)
         const contactUser = JSON.parse(data)
-        console.log(contactUser)
+        io.to(sender).emit("contact-user", contactUser);
     })
 })
 
