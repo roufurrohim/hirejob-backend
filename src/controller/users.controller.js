@@ -32,7 +32,7 @@ const users = {
       usersModels.hasMany(portfolio, {foreignKey: "users_id"})
 
       const result = await usersModels.findAll({
-        include: [Skill, Exp],
+        include: [Skill, Exp, portfolio],
         where: {
               name: {
                 [Op.like]: `%${search}%`,
