@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../helpers/env");
 const Skill = require("../models/skillmodel");
 const Exp = require("../models/expmodel");
+const portfolio = require("../models/portfolio.model.js");
 const Op = Sequelize.Op;
 const sendEmail = require("../helpers/mail")
 
@@ -28,6 +29,7 @@ const users = {
       usersModels.hasMany(Skill, {foreignKey: "users_id"})
 
       usersModels.hasMany(Exp, {foreignKey: "users_id"})
+      usersModels.hasMany(portfolio, {foreignKey: "users_id"})
 
       const result = await usersModels.findAll({
         include: [Skill, Exp],
@@ -76,11 +78,13 @@ const users = {
 
       usersModels.hasMany(Exp, {foreignKey: "users_id"})
 
+      usersModels.hasMany(portfolio, {foreignKey: "users_id"})
+
       const result = await usersModels.findAll({
         where: {
           id,
         },
-        include: [Skill, Exp]
+        include: [Skill, Exp, portfolio]
       });
       success(res, result, "Get Details Users Success");
     } catch (error) {
