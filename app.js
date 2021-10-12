@@ -9,7 +9,6 @@ const {Op} = require("sequelize")
 // const usersRouter = require('./src/route/users.route');
 const portfolioRouter = require('./src/route/portfolio.route')
 const Messages = require('./src/models/messagesModel')
-const {Op} = require("sequelize")
 
 const usersRouter = require('./src/route/users.route');
 const portfolioRouter = require('./src/route/portfolio.route')
@@ -62,7 +61,25 @@ io.on("connection", (socket)=>{
                 }]
             },
         })
+	const data = JSON.stringify(getMessage)
+        const message = JSON.parse(data)
+        console.log(message)
         io.to(sender).emit("history-messages", getMessage);
+    })
+    socket.on("list-user", async(sender)=>{
+        const getUser = await Messages.findAll({
+            where:{
+                [Op.or] : [{sender: sender}, {receiver: sender}]
+            },
+            group: ['sender','receiver'],
+            include: [
+                {model: Users, as: 'senderUsers'},
+                {model: Users,as: 'receiverUsers'}
+                    ]
+        })
+        const data = JSON.stringify(getUser)
+        const contactUser = JSON.parse(data)
+        console.log(contactUser)
     })
 })
 
