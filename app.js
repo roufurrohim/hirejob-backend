@@ -10,15 +10,17 @@ const Users = require("./src/models/users.model")
 // const usersRouter = require('./src/route/users.route');
 const portfolioRouter = require('./src/route/portfolio.route')
 const Messages = require('./src/models/messagesModel')
-
+const skillrouter = require('./src/route/skillrouter')
 const usersRouter = require('./src/route/users.route');
+const exprouter = require('./src/route/exprouter')
 
 const app  = express()
 app.use(cors())
 app.use(bodyparser.json())
-app.use(portfolioRouter);
 app.use(usersRouter);
 app.use(portfolioRouter);
+app.use(skillrouter)
+app.use(exprouter)
 app.use("/uploads", express.static(__dirname + "/image/uploads"))
 app.use("/helpers", express.static(__dirname + "/image/helpers"))
 
