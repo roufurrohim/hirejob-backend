@@ -46,6 +46,7 @@ const users = {
 
       success(res, result, "Add Portfolio Success");
     } catch (error) {
+      
       failed(res, 500, error);
     }
   },

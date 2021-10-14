@@ -7,10 +7,10 @@ const { Server } = require('socket.io')
 const {Op} = require("sequelize")
 const Users = require("./src/models/users.model")
 
-// const usersRouter = require('./src/route/users.route');
+const skillRouter = require('./src/route/skillrouter');
 const portfolioRouter = require('./src/route/portfolio.route')
+const workExpRouter = require('./src/route/exprouter')
 const Messages = require('./src/models/messagesModel')
-
 const usersRouter = require('./src/route/users.route');
 
 const app  = express()
@@ -19,6 +19,8 @@ app.use(bodyparser.json())
 app.use(portfolioRouter);
 app.use(usersRouter);
 app.use(portfolioRouter);
+app.use(skillRouter);
+app.use(workExpRouter);
 app.use("/uploads", express.static(__dirname + "/image/uploads"))
 app.use("/helpers", express.static(__dirname + "/image/helpers"))
 
