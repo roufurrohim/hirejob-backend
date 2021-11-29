@@ -12,13 +12,14 @@ const portfolioRouter = require('./src/route/portfolio.route')
 const workExpRouter = require('./src/route/exprouter')
 const Messages = require('./src/models/messagesModel')
 const usersRouter = require('./src/route/users.route');
+const exprouter = require('./src/route/exprouter')
 
 const app  = express()
 app.use(cors())
 app.use(bodyparser.json())
-app.use(portfolioRouter);
 app.use(usersRouter);
 app.use(portfolioRouter);
+app.use(exprouter)
 app.use(skillRouter);
 app.use(workExpRouter);
 app.use("/uploads", express.static(__dirname + "/image/uploads"))
