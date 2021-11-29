@@ -6,6 +6,7 @@ const { Server } = require('socket.io')
 // const Messages = require('./src/models/messagesModel')
 const {Op} = require("sequelize")
 const Users = require("./src/models/users.model")
+const {PORT} = require("./src/helpers/env")
 
 const skillRouter = require('./src/route/skillrouter');
 const portfolioRouter = require('./src/route/portfolio.route')
@@ -86,7 +87,6 @@ io.on("connection", (socket)=>{
     })
 })
 
-const PORT = 2021
 httpServer.listen(PORT, () => {
     console.log(`Service running on Port ${PORT}`);
 });
