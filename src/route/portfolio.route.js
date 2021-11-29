@@ -6,10 +6,10 @@ const upload = require("../middleware/upload")
 const routerPortfolio = express.Router();
 
 routerPortfolio
-.get("/portfolio/:id", authentic, getAll)
-.get("/portfolio-detail/:id", authentic, getDetail)
-.post("/portfolio/:id", authentic, upload, insert)
-.put("/portfolio/:id", authentic, upload, update)
-.delete("/portfolio/:id", authentic, deletePortfolio)
+.get("/portfolio/:id", getAll)
+.get("/portfolio-detail/:id", getDetail)
+.post("/portfolio/:id", upload, insert)
+.put("/portfolio/:id",upload, update)
+.delete("/portfolio/:id", deletePortfolio)
 
 module.exports = routerPortfolio

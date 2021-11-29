@@ -17,7 +17,7 @@ const users = {
       const { query } = req;
       const search = query.search === undefined ? "" : query.search;
       const field = query.field === undefined ? "id" : query.field;
-      const typeSort = query.sort === undefined ? "" : query.sort;
+      const typeSort = query.sort === undefined ? "ASC" : query.sort;
       const limit = query.limit === undefined ? 5 : parseInt(query.limit);
       const page = query.page === undefined ? 1 : query.page;
       const offset = page === 1 ? 0 : (page - 1) * limit;
@@ -31,6 +31,15 @@ const users = {
       usersModels.hasMany(Exp, {foreignKey: "users_id"})
       usersModels.hasMany(portfolio, {foreignKey: "users_id"})
 
+      const all = await usersModels.findAll({
+        include: [Skill, Exp, portfolio],
+        where: {
+              name: {
+                [Op.like]: `%${search}%`,
+              },
+            },
+      })
+
       const result = await usersModels.findAll({
         include: [Skill, Exp, portfolio],
         where: {
@@ -43,7 +52,14 @@ const users = {
             field,
             typeSort,
           })
-        success(res, result, 'Get All Users Success');
+          const response = {
+            result,
+            totalPage: Math.ceil(all.length/limit),
+            limit,
+            page,
+          }
+        success(res, response, 'Get All Users Success');
+        // success(res, result, 'Get All Users Success');
 
     } catch (error) {
       failed(res, 404, error);
@@ -52,7 +68,14 @@ const users = {
   myDetail: async (req, res) => {
       try{
           const id = req.userId;
+          Exp.belongsTo(usersModels, {foreignKey: "users_id"})
+
+      usersModels.hasMany(Skill, {foreignKey: "users_id"})
+
+      usersModels.hasMany(Exp, {foreignKey: "users_id"})
+      usersModels.hasMany(portfolio, {foreignKey: "users_id"})
           const result = await usersModels.findAll({
+            include: [Skill, Exp, portfolio],
               where: {
                   id,
               }
@@ -167,7 +190,7 @@ const users = {
         linkedin,
         status,
       } = req.body;
-      // console.log(name)
+      
       const id = req.params.id;
       const hash = bcrypt.hashSync(password, 10);
       const Detail = await usersModels.findAll({
@@ -180,6 +203,67 @@ const users = {
           name,
           email,
           password: hash,
+          no_telp,
+          image: req.file ? req.file.filename : "default.png",
+          special_skill,
+          descriptions,
+          workplace,
+          sector,
+          city,
+          ig,
+          github,
+          gitlab,
+          linkedin,
+          status,
+        },
+        {
+          where: {
+            id,
+          },
+        });
+      if (Detail[0].image === "default.png") {
+        success(res, result, "Update Data Success");
+      } else {
+        fs.unlink(`./image/uploads/${Detail[0].image}`, (err) => {
+          if (err) {
+            failed(res.status(500), 500, err);
+          } else {
+            success(res, result, "Update Data Success");
+          }
+        });
+      }
+    } catch (error) {
+      failed(res, 500, error);
+    }
+  },
+  updateWorker: async (req, res) => {
+    try {
+      const {
+        name,
+        email,
+        no_telp,
+        special_skill,
+        descriptions,
+        workplace,
+        sector,
+        city,
+        ig,
+        github,
+        gitlab,
+        linkedin,
+        status,
+      } = req.body;
+      
+      const id = req.params.id;
+      const Detail = await usersModels.findAll({
+        where: {
+          id,
+        },
+      });
+      const result = await usersModels.update(
+        {
+          name,
+          email,
           no_telp,
           image: req.file ? req.file.filename : "default.png",
           special_skill,
