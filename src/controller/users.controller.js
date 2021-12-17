@@ -1,4 +1,5 @@
 const usersModels = require("../models/users.model");
+const skillModels = require("../models/skillmodel")
 const { Sequelize } = require("sequelize");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
@@ -17,41 +18,84 @@ const users = {
       const { query } = req;
       const search = query.search === undefined ? "" : query.search;
       const field = query.field === undefined ? "id" : query.field;
+      const sortby = query.sortby === undefined ? "" : query.sortby; 
       const typeSort = query.sort === undefined ? "ASC" : query.sort;
       const limit = query.limit === undefined ? 5 : parseInt(query.limit);
       const page = query.page === undefined ? 1 : query.page;
       const offset = page === 1 ? 0 : (page - 1) * limit;
       
       Skill.belongsTo(usersModels, {foreignKey: "users_id"})
-      
+
       Exp.belongsTo(usersModels, {foreignKey: "users_id"})
-
       usersModels.hasMany(Skill, {foreignKey: "users_id"})
-
       usersModels.hasMany(Exp, {foreignKey: "users_id"})
       usersModels.hasMany(portfolio, {foreignKey: "users_id"})
 
       const all = await usersModels.findAll({
-        include: [Skill, Exp, portfolio],
-        where: {
-              name: {
-                [Op.like]: `%${search}%`,
-              },
-            },
-      })
+        // include: [Exp, portfolio],
+        
+        include: {
+          model: Skill,
+          where: {
+            [Op.or]: {
+              name_skill:{ 
+                [Op.like]: `%${search}%`
+              }
+            }              
+          }
+        },
+        // where: {
+        //   [Op.or]: [
+        //     {
+        //         name: 
+        //         {
+        //           [Op.like]: `%${search}%`,
+        //         }
+        //     }, 
+        //     {
+        //         city: 
+        //         {
+        //           [Op.like]: `%${search}%`,
+        //         }
+        //     },
+        //   ],
+        // },
+          })
 
       const result = await usersModels.findAll({
-        include: [Skill, Exp, portfolio],
-        where: {
-              name: {
-                [Op.like]: `%${search}%`,
-              },
-            },
+        // include: [Exp, portfolio],
+       
+        include: {
+          model: Skill,
+          where: {
+            [Op.or]: {
+              name_skill:{ 
+                [Op.like]: `%${search}%`
+              }
+            }              
+          }        
+        }, 
+        // where: {
+        //   [Op.or]: [
+        //     {
+        //         name: 
+        //         {
+        //           [Op.like]: `%${search}%`,
+        //         }
+        //     }, 
+        //     {
+        //         city: 
+        //         {
+        //           [Op.like]: `%${search}%`,
+        //         }
+        //     },
+        //   ],
+        // },           
             offset,
             limit,
             field,
             typeSort,
-          })
+      })
           const response = {
             result,
             totalPage: Math.ceil(all.length/limit),
@@ -59,8 +103,6 @@ const users = {
             page,
           }
         success(res, response, 'Get All Users Success');
-        // success(res, result, 'Get All Users Success');
-
     } catch (error) {
       failed(res, 404, error);
     }
